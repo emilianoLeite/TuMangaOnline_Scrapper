@@ -21,7 +21,6 @@
     "@types/mongodb": "^3.6.18",
     "@types/morgan": "^1.9.2",
     "@types/node": "^15.12.5",
-    "babel-node": "^0.0.1-security",
     "nodemon": "^2.0.8",
     "ts-node": "^10.0.0",
     "typescript": "^4.3.4"
