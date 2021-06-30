@@ -5,9 +5,9 @@
   "main": "./src/index.ts",
   "scripts": {
     "start": "nodemon --watch 'src/' --exec 'ts-node src/index.ts' -e ts",
-    "start:prod": "node build/index.js",
-    "build": "tsc",
-    "heroku-postbuild": "cat ./build/index.js | head -n 5"
+    "start:prod": "node dist/index.js",
+    "build": "tsc --outDir dist/",
+    "heroku-postbuild": "cat ./dist/index.js | head -n 5"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
