@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon --watch 'src/' --exec 'ts-node src/index.ts' -e ts",
     "start:prod": "node dist/index.js",
-    "build": "tsc --outDir dist/",
+    "build": "tsc",
     "postbuild": "cat ./dist/index.js | head -n 5"
   },
   "dependencies": {
