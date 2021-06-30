@@ -2,7 +2,11 @@ import express from 'express'
 import cookieParser from 'cookie-parser';
 import logger from 'morgan'
 
-import { home as homeRoutes, users as usersRoutes } from './routes'
+import { 
+  home as homeRoutes, 
+  users as usersRoutes,
+  manga as mangaRoutes
+} from './routes'
 import { config } from './config';
 
 const app = express();
@@ -14,6 +18,7 @@ app.use(cookieParser());
 
 app.use('/', homeRoutes);
 app.use('/users', usersRoutes);
+app.use('/manga', mangaRoutes);
 
 
 app.listen(config.PORT, () => {
