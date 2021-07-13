@@ -4,8 +4,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 // import https from "https";
 // import type { Collection, Db, MongoCallback } from 'mongodb';
 import fetch, { Headers } from 'node-fetch';
-import { crawlMangaPage } from './crawler';
-import { bypassCloudFare } from "./cloudfare-bypass";
+import { stealh } from "./pupeteer-stealth";
 
 type Response = {
   error?: unknown
@@ -34,7 +33,8 @@ export default async function handler(
       //   res.status(200).json({ documents })
       // })
       // const pageHtml = await mangaPageHtml('8428/boku-no-hero-academia')
-      const pageHtml = await bypassCloudFare();
+      // const pageHtml = await bypassCloudFare();
+      const pageHtml = await stealh(`8428/boku-no-hero-academia`);
       // const pageHtml = await crawlMangaPage('8428/boku-no-hero-academia')
       res.status(200).json({pageHtml})
     // } else {

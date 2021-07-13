@@ -1,4 +1,9 @@
+# TuMangaOnline Scrapper
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+
+## TODO
+- Maybe use [bottleneck](https://www.npmjs.com/package/bottleneck) to throtle requests
 
 ## Getting Started
 
