@@ -5,23 +5,63 @@ import puppeteer from 'puppeteer-extra'
 // add stealth plugin and use defaults (all evasion techniques)
 import StealthPlugin from 'puppeteer-extra-plugin-stealth'
 puppeteer.use(StealthPlugin())
+import assert from "assert";
 
+type Chapter = {
+  chapterNumber: number
+  title: string | undefined
+}
 
-export const stealh = (mangaPage: string) => {
+function parseChapterName(rawChapterName: string): Chapter {
+  const splitChapterName = rawChapterName.split(':').map(x => x.trim())
+  const chapterHeader = splitChapterName[0]
+  const title = splitChapterName[1] as string | undefined /* if String.split does not find the separator, 
+  it'll return a single element array */
 
-  // puppeteer usage as normal
-  puppeteer.launch().then(async browser => {
-    console.log('Running tests..')
-    const page = await browser.newPage()
+  const chapterNumberRegex = /Capítulo\s([0-9]+\.[0-9]+)/ // Exmaple: "Capítulo 229.50"
+  const regexMatch = chapterHeader.match(chapterNumberRegex)
+  
+  assert(regexMatch != null, "Chapter regex failed")
+  const chapterNumber = parseFloat(regexMatch[1])
+
+  return {chapterNumber, title}
+}
+
+export const getChapterList = async (mangaPage: string) => {
+  const browser = await puppeteer.launch();
+  const page = await browser.newPage();
+  
+  console.log(`Fetching ${mangaPage}...`);
+  
+  try {
     await page.goto(`https://lectortmo.com/library/manga/${mangaPage}`, {
       waitUntil: 'domcontentloaded'
-    }) //catch error here
-    const x = await page.$('body') //catch error here also
-    // await page.evaluate()
-    // console.log(`json`, await x?.$(`div`).then((x) => x.));
-    
-    await browser.close()
-    console.log(`All done, check the screenshot. ✨`)
-  })
+    });
+  } catch (fetchError) {
+    console.error(`Error fetching ${mangaPage}: ${fetchError}`);
+
+    await browser.close();
+     
+    throw fetchError;
+  }
+
+  try {
+    const listItems = await page.$$eval(
+      "#chapters > ul.list-group > li.list-group-item",
+      (chapterListItems) => {
+        return (chapterListItems as HTMLElement[]).map((li) => li.innerText);
+      }
+    );
+
+    assert(listItems.length > 0, "No .list-group-item found")
+
+    return listItems.map(parseChapterName);
+  } catch (parseError) {
+    console.error(`Error parsing ${mangaPage}: ${parseError}`);
+
+    throw parseError;
+  } finally {
+    browser.close();
+  }
   
 }

@@ -4,6 +4,11 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## TODO
 - Maybe use [bottleneck](https://www.npmjs.com/package/bottleneck) to throtle requests
+- Investigate possible memory leak
+    ```
+    (node:23224) MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 exit listeners added to [process]. Use emitter.setMaxListeners() to increase limit
+    (node:23224) MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 SIGHUP listeners added to [process]. Use emitter.setMaxListeners() to increase limit
+    ```
 
 ## Getting Started
 

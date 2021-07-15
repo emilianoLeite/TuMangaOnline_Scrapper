@@ -3,15 +3,24 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 // import { connectToDatabase } from '../../db/mongodb';
 // import https from "https";
 // import type { Collection, Db, MongoCallback } from 'mongodb';
-import fetch, { Headers } from 'node-fetch';
-import { stealh } from "./pupeteer-stealth";
+import { getChapterList } from "./pupeteer-stealth";
+import assert from "assert";
 
 type Response = {
   error?: unknown
   [prop: string]: unknown
 }
 
-type MangaInfo = unknown;
+function assertValidMangaIdentifier(mangaQueryString: NextApiRequest["query"]['any']): asserts mangaQueryString is string {
+
+  assert(typeof(mangaQueryString) === 'string', "You must supply a valid TMO manga identifier. Required query string: ?manga=<number>/<manga_name>")
+
+  const [mangaNumber, mangaName] = mangaQueryString.split('/')
+
+  assert(typeof(mangaNumber) === 'string', "You must supply a valid TMO manga identifier. Required query string: ?manga=<number>/<manga_name>") // Should actually check if it is a number, but this is good enough
+
+  assert(typeof(mangaName) === 'string', "You must supply a valid TMO manga identifier. Required query string: ?manga=<number>/<manga_name>")
+}
 
 const MANGA_NOTIFICATIONS_COLLECTION = 'mangaNotifications'
 
@@ -34,7 +43,9 @@ export default async function handler(
       // })
       // const pageHtml = await mangaPageHtml('8428/boku-no-hero-academia')
       // const pageHtml = await bypassCloudFare();
-      const pageHtml = await stealh(`8428/boku-no-hero-academia`);
+
+      assertValidMangaIdentifier(req.query.manga)
+      const pageHtml = await getChapterList(req.query.manga);
       // const pageHtml = await crawlMangaPage('8428/boku-no-hero-academia')
       res.status(200).json({pageHtml})
     // } else {
