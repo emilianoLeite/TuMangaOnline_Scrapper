@@ -1,16 +1,13 @@
 import { MongoClient } from 'mongodb'
-import type { Db, MongoClientOptions } from 'mongodb'
+import type { MongoClientOptions } from 'mongodb'
 
-interface Cache {
-   conn: null | {client: MongoClient,db: Db};
-   promise: null | Promise<{client: MongoClient,db: Db}> ;
-}
+// Example copied from https://github.com/vercel/next.js/blob/canary/examples/with-mongodb/util/mongodb.js
 /**
  * Global is used here to maintain a cached connection across hot reloads
  * in development. This prevents connections growing exponentially
  * during API Route usage.
  */
-let cached: Cache = global.mongo
+let cached = global.mongo
 
 if (!cached) {
   cached = global.mongo = { conn: null, promise: null }
@@ -43,14 +40,11 @@ export async function connectToDatabase() {
       forceServerObjectId: true
     }
 
-    const x  = MongoClient.connect(MONGODB_URI, opts).then((client) => {
-      return {
-        client,
-        db: client.db(MONGODB_DB),
-      }
-    })
-    cached.promise = x
+    cached.promise  = MongoClient.connect(MONGODB_URI, opts).then(
+      (client) => ({ client, db: client.db(MONGODB_DB) })
+    )
   }
+
   cached.conn = await cached.promise
   return cached.conn
 }
