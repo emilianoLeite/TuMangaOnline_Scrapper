@@ -1,6 +1,8 @@
 import { MongoClient } from 'mongodb'
-import type { MongoClientOptions } from 'mongodb'
+import type { Collection, Db, MongoCallback, MongoClientOptions } from 'mongodb';
 
+const MANGA_NOTIFICATIONS_COLLECTION = 'mangaNotifications'
+type MangaInfo = unknown;
 // Example copied from https://github.com/vercel/next.js/blob/canary/examples/with-mongodb/util/mongodb.js
 /**
  * Global is used here to maintain a cached connection across hot reloads
@@ -47,4 +49,16 @@ export async function connectToDatabase() {
 
   cached.conn = await cached.promise
   return cached.conn
+}
+
+
+export function getNotifications(db: Db, callback: MongoCallback<Collection<any>>): void {
+  db.collection(MANGA_NOTIFICATIONS_COLLECTION, callback);
+}
+
+export function updateMangaInfo(db: Db, mangaInfo: MangaInfo): void {
+  db.collection(MANGA_NOTIFICATIONS_COLLECTION, async (err, result) => {
+
+    await result.insertOne(mangaInfo)
+  });
 }

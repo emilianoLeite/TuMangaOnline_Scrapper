@@ -9,6 +9,7 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
     (node:23224) MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 exit listeners added to [process]. Use emitter.setMaxListeners() to increase limit
     (node:23224) MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 SIGHUP listeners added to [process]. Use emitter.setMaxListeners() to increase limit
     ```
+    - I'll live with it, lets see if it turns out to be a pain
 
 ## Getting Started
 
